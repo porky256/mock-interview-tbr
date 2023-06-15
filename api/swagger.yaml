@@ -1,0 +1,679 @@
+openapi: 3.0.0
+info:
+  title: Mock Interview (TBR) 0.1
+  description: |-
+    This is a Mock Interview  (TBR)specification.
+
+
+    Some useful links:
+    - [Mock Interview (TBR)](https://github.com/porky256/mock-interview-tbr)
+  version: 0.1.0
+externalDocs:
+  description: Find out more about Mock Interview
+  url: https://www.notion.so/Mock-interview-TBR-d709c6cb7fd243c698a311d556243800?pvs=4
+servers:
+- url: /
+paths:
+  /skill:
+    post:
+      tags:
+      - skill
+      summary: Add a new skill
+      operationId: createSkill
+      requestBody:
+        description: Create a new skill
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+  /skill/{skillID}:
+    get:
+      tags:
+      - skill
+      summary: Get a skill by id
+      operationId: GetSkill
+      parameters:
+      - name: skillID
+        in: path
+        description: ID of skill to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Skill'
+    put:
+      tags:
+      - skill
+      summary: Update a skill by id
+      operationId: UpdateSkill
+      parameters:
+      - name: skillID
+        in: path
+        description: ID of skill to update
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Update an existent skill
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Skill'
+      responses:
+        "200":
+          description: successful operation
+    delete:
+      tags:
+      - skill
+      summary: Delete a skill by id
+      operationId: DeleteSkill
+      parameters:
+      - name: skillID
+        in: path
+        description: ID of skill to delete
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+  /matching/request:
+    post:
+      tags:
+      - matching
+      summary: Create a matching request
+      description: This can only be done by the logged in user.
+      operationId: PostMatchingRequest
+      parameters:
+      - name: skillID
+        in: query
+        description: ID of skill
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: userID
+        in: query
+        description: ID of user
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: requstedSkills
+        in: query
+        description: list of requested skills
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Skill'
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+  /matching/match/findByUserID:
+    get:
+      tags:
+      - matching
+      summary: Get a match
+      description: This can only be done by the logged in user.
+      operationId: GetMatchbyUserID
+      parameters:
+      - name: userID
+        in: query
+        description: ID of user
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                xml:
+                  wrapped: true
+                items:
+                  $ref: '#/components/schemas/Match'
+                x-content-type: application/json
+  /matching/match/{matchID}:
+    get:
+      tags:
+      - matching
+      summary: Get a match
+      description: This can only be done by the logged in user.
+      operationId: GetMatch
+      parameters:
+      - name: matchID
+        in: path
+        description: ID of match to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+    post:
+      tags:
+      - matching
+      summary: Approve a match
+      description: This can only be done by the logged in user.
+      parameters:
+      - name: matchID
+        in: path
+        description: ID of match to approve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      - name: date
+        in: query
+        description: date of interview
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          format: date
+      responses:
+        "200":
+          description: successful operation
+  /matching/interview/{interviewID}:
+    get:
+      tags:
+      - matching
+      summary: Get a interview
+      description: This can only be done by the logged in user.
+      parameters:
+      - name: interviewID
+        in: path
+        description: ID of interview to return
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Interview'
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /user/login:
+    get:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: loginUser
+      parameters:
+      - name: username
+        in: query
+        description: The user name for login
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              style: simple
+              explode: false
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                x-content-type: application/json
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      description: ""
+      operationId: logoutUser
+      parameters: []
+      responses:
+        default:
+          description: successful operation
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Get user by user name
+      description: ""
+      operationId: getUserByName
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be fetched
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+      - user
+      summary: Update user
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+      - name: username
+        in: path
+        description: name that need to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+      - user
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+      - name: username
+        in: path
+        description: The name that needs to be deleted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+  /user/{username}/addSkill:
+    post:
+      tags:
+      - user
+      summary: Add a skill to User
+      description: This can only be done by the logged in user.
+      parameters:
+      - name: username
+        in: path
+        description: The name of user to add skill
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: skillID
+        in: query
+        description: ID of skill to add to user
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      - name: score
+        in: query
+        description: score of user's skill
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: successful operation
+components:
+  schemas:
+    Skill:
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: english
+        description:
+          type: string
+          example: basic skill used everywhere
+      example:
+        name: english
+        description: basic skill used everywhere
+        id: 10
+      xml:
+        name: order
+    UsersSkill:
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100000
+        skill:
+          $ref: '#/components/schemas/Skill'
+        score:
+          type: integer
+          format: int32
+          example: 5
+      example:
+        score: 5
+        skill:
+          name: english
+          description: basic skill used everywhere
+          id: 10
+        id: 100000
+      xml:
+        name: customer
+    User:
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        username:
+          type: string
+          example: theUser
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: James
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: "12345"
+        phone:
+          type: string
+          example: "12345"
+        userStatus:
+          type: integer
+          description: User Status
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: Go developer with 5 years of expirience
+        usersSkills:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/UsersSkill'
+      example:
+        firstName: John
+        lastName: James
+        password: "12345"
+        userStatus: 1
+        phone: "12345"
+        usersSkills:
+        - score: 5
+          skill:
+            name: english
+            description: basic skill used everywhere
+            id: 10
+          id: 100000
+        - score: 5
+          skill:
+            name: english
+            description: basic skill used everywhere
+            id: 10
+          id: 100000
+        description: Go developer with 5 years of expirience
+        id: 10
+        email: john@email.com
+        username: theUser
+      xml:
+        name: user
+    RequestToMatch:
+      properties:
+        id:
+          type: integer
+          format: int64
+        skill:
+          $ref: '#/components/schemas/User'
+        requiredSkills:
+          type: array
+          xml:
+            wrapped: true
+          items:
+            $ref: '#/components/schemas/Skill'
+      xml:
+        name: tag
+    Match:
+      properties:
+        id:
+          type: integer
+          format: int64
+        userAsker:
+          $ref: '#/components/schemas/User'
+        userMatch:
+          $ref: '#/components/schemas/User'
+        matchScore:
+          type: integer
+          format: int32
+          example: 92
+      example:
+        matchScore: 92
+        id: 0
+        userMatch: null
+        userAsker:
+          firstName: John
+          lastName: James
+          password: "12345"
+          userStatus: 1
+          phone: "12345"
+          usersSkills:
+          - score: 5
+            skill:
+              name: english
+              description: basic skill used everywhere
+              id: 10
+            id: 100000
+          - score: 5
+            skill:
+              name: english
+              description: basic skill used everywhere
+              id: 10
+            id: 100000
+          description: Go developer with 5 years of expirience
+          id: 10
+          email: john@email.com
+          username: theUser
+      xml:
+        name: tag
+    Interview:
+      properties:
+        id:
+          type: integer
+          format: int64
+        match:
+          $ref: '#/components/schemas/Match'
+        status:
+          type: string
+          description: Interview Status
+          example: approved
+          enum:
+          - created
+          - approved
+          - inProgress
+          - archived
+        date:
+          type: string
+          format: date-time
+      example:
+        date: 2000-01-23T04:56:07.000+00:00
+        match:
+          matchScore: 92
+          id: 0
+          userMatch: null
+          userAsker:
+            firstName: John
+            lastName: James
+            password: "12345"
+            userStatus: 1
+            phone: "12345"
+            usersSkills:
+            - score: 5
+              skill:
+                name: english
+                description: basic skill used everywhere
+                id: 10
+              id: 100000
+            - score: 5
+              skill:
+                name: english
+                description: basic skill used everywhere
+                id: 10
+              id: 100000
+            description: Go developer with 5 years of expirience
+            id: 10
+            email: john@email.com
+            username: theUser
+        id: 0
+        status: approved
+      xml:
+        name: tag
+    ApiResponse:
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  requestBodies:
+    Skill:
+      description: Skill object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Skill'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Skill'
+    UserArray:
+      description: List of user object
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:skills: modify skills in your account
+            read:skills: read your skills
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
