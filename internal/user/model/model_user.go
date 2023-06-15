@@ -3,7 +3,7 @@ package model
 import "github.com/porky256/mock-interview-tbr/internal/skill/model"
 
 type User struct {
-	Id          int64        `json:"id,omitempty"`
+	ID          int64        `json:"id,omitempty"`
 	Username    string       `json:"username,omitempty"`
 	FirstName   string       `json:"firstName,omitempty"`
 	LastName    string       `json:"lastName,omitempty"`
@@ -16,7 +16,7 @@ type User struct {
 }
 
 type UsersSkill struct {
-	Id    int64        `json:"id,omitempty"`
+	ID    int64        `json:"id,omitempty"`
 	Skill *model.Skill `json:"skill,omitempty"`
 	Score int32        `json:"score,omitempty"`
 }

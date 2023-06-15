@@ -1,14 +1,16 @@
 package routes
 
 import (
+	"github.com/porky256/mock-interview-tbr/internal/match"
+	"github.com/porky256/mock-interview-tbr/internal/skill"
+	"github.com/porky256/mock-interview-tbr/internal/user"
+
 	"fmt"
 	"log"
 
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-
-	"github.com/porky256/mock-interview-tbr/internal/handlers"
 )
 
 func NewRouter() *chi.Mux {
@@ -16,24 +18,24 @@ func NewRouter() *chi.Mux {
 
 	router.Get("/", Index)
 
-	router.Get("/matching/match/{matchID}", handlers.GetMatch)
-	router.Get("/matching/match/findByUserID", handlers.GetMatchByUserID)
-	router.Get("/matching/interview/{interviewID}", handlers.GetInterviewByID)
-	router.Post("/matching/match/{matchID}", handlers.PostMatch)
-	router.Post("/matching/request", handlers.PostMatchingRequest)
+	router.Get("/matching/match/{matchID}", match.GetMatch)
+	router.Get("/matching/match/findByUserID", match.GetMatchByUserID)
+	router.Get("/matching/interview/{interviewID}", match.GetInterviewByID)
+	router.Post("/matching/match/{matchID}", match.PostMatch)
+	router.Post("/matching/request", match.PostMatchingRequest)
 
-	router.Post("/skill", handlers.CreateSkill)
-	router.Get("/skill/{skillID}", handlers.GetSkill)
-	router.Put("/skill/{skillID}", handlers.UpdateSkill)
-	router.Delete("/skill/{skillID}", handlers.DeleteSkill)
+	router.Post("/skill", skill.CreateSkill)
+	router.Get("/skill/{skillID}", skill.GetSkill)
+	router.Put("/skill/{skillID}", skill.UpdateSkill)
+	router.Delete("/skill/{skillID}", skill.DeleteSkill)
 
-	router.Post("/user", handlers.CreateUser)
-	router.Get("/user/login", handlers.LoginUser)
-	router.Get("/user/logout", handlers.LogoutUser)
-	router.Post("/user/{username}/addSkill", handlers.PostAddSkillToUser)
-	router.Get("/user/{username}", handlers.GetUserByName)
-	router.Put("/user/{username}", handlers.UpdateUser)
-	router.Delete("/user/{username}", handlers.DeleteUser)
+	router.Post("/user", user.CreateUser)
+	router.Get("/user/login", user.LoginUser)
+	router.Get("/user/logout", user.LogoutUser)
+	router.Post("/user/{username}/addSkill", user.PostAddSkillToUser)
+	router.Get("/user/{username}", user.GetUserByName)
+	router.Put("/user/{username}", user.UpdateUser)
+	router.Delete("/user/{username}", user.DeleteUser)
 
 	return router
 }
