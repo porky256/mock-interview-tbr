@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/porky256/mock-interview-tbr/internal/routes"
+
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -11,5 +13,12 @@ func main() {
 
 	router := routes.NewRouter()
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	const timeout = 3 * time.Second
+
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           router,
+		ReadHeaderTimeout: timeout,
+	}
+	log.Fatal(server.ListenAndServe())
 }

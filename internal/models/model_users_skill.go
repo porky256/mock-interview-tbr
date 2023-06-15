@@ -1,7 +1,7 @@
 package models
 
 type UsersSkill struct {
-	Id int64 `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 
 	Skill *Skill `json:"skill,omitempty"`
 

@@ -2,9 +2,13 @@ package routes
 
 import (
 	"fmt"
-	"github.com/go-chi/chi/v5"
-	"github.com/porky256/mock-interview-tbr/internal/handlers"
+	"log"
+
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+
+	"github.com/porky256/mock-interview-tbr/internal/handlers"
 )
 
 func NewRouter() *chi.Mux {
@@ -34,6 +38,6 @@ func NewRouter() *chi.Mux {
 	return router
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+func Index(w http.ResponseWriter, _ *http.Request) {
+	log.Println(fmt.Fprintf(w, "Hello World!"))
 }

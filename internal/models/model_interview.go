@@ -5,7 +5,7 @@ import (
 )
 
 type Interview struct {
-	Id int64 `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 
 	Match *Match `json:"match,omitempty"`
 	// Interview Status

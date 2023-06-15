@@ -1,7 +1,7 @@
 package models
 
 type RequestToMatch struct {
-	Id int64 `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 
 	Skill *User `json:"skill,omitempty"`
 

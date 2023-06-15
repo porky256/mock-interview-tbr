@@ -1,7 +1,7 @@
 package models
 
 type Match struct {
-	Id int64 `json:"id,omitempty"`
+	ID int64 `json:"id,omitempty"`
 
 	UserAsker *User `json:"userAsker,omitempty"`
 

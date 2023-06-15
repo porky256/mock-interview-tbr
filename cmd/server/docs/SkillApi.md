@@ -2,12 +2,12 @@
 
 All URIs are relative to */*
 
-Method | HTTP request | Description
-------------- | ------------- | -------------
-[**CreateSkill**](SkillApi.md#CreateSkill) | **Post** /skill | Add a new skill
-[**DeleteSkill**](SkillApi.md#DeleteSkill) | **Delete** /skill/{skillID} | Delete a skill by id
-[**GetSkill**](SkillApi.md#GetSkill) | **Get** /skill/{skillID} | Get a skill by id
-[**UpdateSkill**](SkillApi.md#UpdateSkill) | **Put** /skill/{skillID} | Update a skill by id
+| Method                                     | HTTP request                | Description          |
+|--------------------------------------------|-----------------------------|----------------------|
+| [**CreateSkill**](SkillApi.md#createskill) | **Post** /skill             | Add a new skill      |
+| [**DeleteSkill**](SkillApi.md#deleteskill) | **Delete** /skill/{skillID} | Delete a skill by id |
+| [**GetSkill**](SkillApi.md#getskill)       | **Get** /skill/{skillID}    | Get a skill by id    |
+| [**UpdateSkill**](SkillApi.md#updateskill) | **Put** /skill/{skillID}    | Update a skill by id |
 
 # **CreateSkill**
 > Skill CreateSkill(ctx, body)
@@ -15,10 +15,10 @@ Add a new skill
 
 ### Required Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **body** | [**Skill**](Skill.md)| Create a new skill | 
+| Name     | Type                  | Description                                                                 | Notes |
+|----------|-----------------------|-----------------------------------------------------------------------------|-------|
+| **ctx**  | **context.Context**   | context for authentication, logging, cancellation, deadlines, tracing, etc. |
+| **body** | [**Skill**](Skill.md) | Create a new skill                                                          |       |
 
 ### Return type
 
@@ -41,10 +41,10 @@ Delete a skill by id
 
 ### Required Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **skillID** | **int64**| ID of skill to delete | 
+| Name        | Type                | Description                                                                 | Notes |
+|-------------|---------------------|-----------------------------------------------------------------------------|-------|
+| **ctx**     | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc. |
+| **skillID** | **int64**           | ID of skill to delete                                                       |       |
 
 ### Return type
 
@@ -67,10 +67,10 @@ Get a skill by id
 
 ### Required Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **skillID** | **int64**| ID of skill to return | 
+| Name        | Type                | Description                                                                 | Notes |
+|-------------|---------------------|-----------------------------------------------------------------------------|-------|
+| **ctx**     | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc. |
+| **skillID** | **int64**           | ID of skill to return                                                       |       |
 
 ### Return type
 
@@ -93,11 +93,11 @@ Update a skill by id
 
 ### Required Parameters
 
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-  **skillID** | **int64**| ID of skill to update | 
- **optional** | ***SkillApiUpdateSkillOpts** | optional parameters | nil if no parameters
+| Name         | Type                         | Description                                                                 | Notes                |
+|--------------|------------------------------|-----------------------------------------------------------------------------|----------------------|
+| **ctx**      | **context.Context**          | context for authentication, logging, cancellation, deadlines, tracing, etc. |
+| **skillID**  | **int64**                    | ID of skill to update                                                       ||
+| **optional** | ***SkillApiUpdateSkillOpts** | optional parameters                                                         | nil if no parameters |
 
 ### Optional Parameters
 Optional parameters are passed through a pointer to a SkillApiUpdateSkillOpts struct
