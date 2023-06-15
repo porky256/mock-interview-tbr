@@ -1,4 +1,4 @@
-package handlers
+package skill
 
 import (
 	"net/http"
