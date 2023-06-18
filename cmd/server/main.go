@@ -16,7 +16,7 @@ func main() {
 	const timeout = 3 * time.Second
 
 	server := &http.Server{
-		Addr:              ":8080",
+		Addr:              "localhost:8080",
 		Handler:           router,
 		ReadHeaderTimeout: timeout,
 	}
