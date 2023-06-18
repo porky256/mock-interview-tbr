@@ -3,6 +3,7 @@ package pg
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/porky256/mock-interview-tbr/internal/database"
 
 	// driver for postgresql
