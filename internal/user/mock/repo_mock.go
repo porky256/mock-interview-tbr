@@ -5,10 +5,10 @@
 package mock_user
 
 import (
+	repomodel "github.com/porky256/mock-interview-tbr/internal/models"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	repomodel "github.com/porky256/mock-interview-tbr/internal/models/repo"
 )
 
 // MockDatabaseUserProvider is a mock of DatabaseUserProvider interface.
@@ -35,10 +35,10 @@ func (m *MockDatabaseUserProvider) EXPECT() *MockDatabaseUserProviderMockRecorde
 }
 
 // GetUserByID mocks base method.
-func (m *MockDatabaseUserProvider) GetUserByID(id int) (*repomodel.User, error) {
+func (m *MockDatabaseUserProvider) GetUserByID(id int) (*repomodel.UserRepo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserByID", id)
-	ret0, _ := ret[0].(*repomodel.User)
+	ret0, _ := ret[0].(*repomodel.UserRepo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -50,7 +50,7 @@ func (mr *MockDatabaseUserProviderMockRecorder) GetUserByID(id interface{}) *gom
 }
 
 // InsertUser mocks base method.
-func (m *MockDatabaseUserProvider) InsertUser(u repomodel.User) error {
+func (m *MockDatabaseUserProvider) InsertUser(u repomodel.UserRepo) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertUser", u)
 	ret0, _ := ret[0].(error)

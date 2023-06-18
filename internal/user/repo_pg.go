@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	repomodel "github.com/porky256/mock-interview-tbr/internal/models/repo"
+	repomodel "github.com/porky256/mock-interview-tbr/internal/models"
 )
 
 // PGUserProvider implements GlobalDatabaseProvider
@@ -24,7 +24,7 @@ func NewPGUserProvider(db *sql.DB, timeout time.Duration) PGUserProvider {
 }
 
 // InsertUser inserts a user into the database
-func (db *PGUserProvider) InsertUser(user repomodel.User) error {
+func (db *PGUserProvider) InsertUser(user repomodel.UserRepo) error {
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 	defer cancel()
 
@@ -51,12 +51,12 @@ func (db *PGUserProvider) InsertUser(user repomodel.User) error {
 }
 
 // GetUserByID scans for user with selected id
-func (db *PGUserProvider) GetUserByID(id int) (*repomodel.User, error) {
+func (db *PGUserProvider) GetUserByID(id int) (*repomodel.UserRepo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 
 	defer cancel()
 
-	user := new(repomodel.User)
+	user := new(repomodel.UserRepo)
 	row := db.DB.QueryRowContext(ctx, "SELECT * FROM users WHERE id=$1", id)
 	err := row.Scan(
 		&user.ID,

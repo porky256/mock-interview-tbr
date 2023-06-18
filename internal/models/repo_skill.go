@@ -1,8 +1,8 @@
-package repomodel
+package models
 
 import "time"
 
-type Skill struct {
+type SkillRepo struct {
 	ID          int
 	Name        string
 	Description string

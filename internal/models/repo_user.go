@@ -1,8 +1,8 @@
-package repomodel
+package models
 
 import "time"
 
-type User struct {
+type UserRepo struct {
 	ID          int
 	Username    string
 	FirstName   string
@@ -16,7 +16,7 @@ type User struct {
 	UpdatedAt   time.Time
 }
 
-type UserSkill struct {
+type UserSkillRepo struct {
 	ID        int
 	SkillID   int
 	UserID    int

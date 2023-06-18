@@ -1,8 +1,8 @@
-package repomodel
+package models
 
 import "time"
 
-type UserMatch struct {
+type UserMatchRepo struct {
 	ID         int
 	UserAsker  int
 	UserMatch  int
@@ -11,14 +11,14 @@ type UserMatch struct {
 	UpdatedAt  time.Time
 }
 
-type MatchRequest struct {
+type MatchRequestRepo struct {
 	ID        int
 	UserID    int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-type SkillInRequest struct {
+type SkillInRequestRepo struct {
 	ID        int
 	RequestID int
 	SkillID   int
@@ -26,7 +26,7 @@ type SkillInRequest struct {
 	UpdatedAt time.Time
 }
 
-type Interview struct {
+type InterviewRepo struct {
 	ID            int
 	MatchID       int
 	Status        int
