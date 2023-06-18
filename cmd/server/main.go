@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/porky256/mock-interview-tbr/internal/routes"
-
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/porky256/mock-interview-tbr/internal/routes"
 )
 
 func main() {

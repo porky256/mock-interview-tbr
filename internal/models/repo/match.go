@@ -1,4 +1,4 @@
-package dalmodel
+package repomodel
 
 import "time"
 

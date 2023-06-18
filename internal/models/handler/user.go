@@ -1,6 +1,4 @@
-package model
-
-import "github.com/porky256/mock-interview-tbr/internal/skill/model"
+package handlermodel
 
 type User struct {
 	ID          int64        `json:"id,omitempty"`
@@ -16,7 +14,7 @@ type User struct {
 }
 
 type UsersSkill struct {
-	ID    int64        `json:"id,omitempty"`
-	Skill *model.Skill `json:"skill,omitempty"`
-	Score int32        `json:"score,omitempty"`
+	ID    int64  `json:"id,omitempty"`
+	Skill *Skill `json:"skill,omitempty"`
+	Score int32  `json:"score,omitempty"`
 }

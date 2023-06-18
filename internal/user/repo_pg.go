@@ -1,14 +1,30 @@
-package pg
+package user
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"time"
 
-	dalmodel "github.com/porky256/mock-interview-tbr/internal/dal/models"
+	repomodel "github.com/porky256/mock-interview-tbr/internal/models/repo"
 )
 
+// PGUserProvider implements GlobalDatabaseProvider
+type PGUserProvider struct {
+	DB           *sql.DB
+	QueryTimeout time.Duration
+}
+
+// NewPGUserProvider creates a new postgres DB entity
+func NewPGUserProvider(db *sql.DB, timeout time.Duration) PGUserProvider {
+	return PGUserProvider{
+		DB:           db,
+		QueryTimeout: timeout,
+	}
+}
+
 // InsertUser inserts a user into the database
-func (db *PostgresDB) InsertUser(user dalmodel.User) error {
+func (db *PGUserProvider) InsertUser(user repomodel.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 	defer cancel()
 
@@ -35,12 +51,12 @@ func (db *PostgresDB) InsertUser(user dalmodel.User) error {
 }
 
 // GetUserByID scans for user with selected id
-func (db *PostgresDB) GetUserByID(id int) (*dalmodel.User, error) {
+func (db *PGUserProvider) GetUserByID(id int) (*repomodel.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 
 	defer cancel()
 
-	user := new(dalmodel.User)
+	user := new(repomodel.User)
 	row := db.DB.QueryRowContext(ctx, "SELECT * FROM users WHERE id=$1", id)
 	err := row.Scan(
 		&user.ID,
