@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/porky256/mock-interview-tbr/internal/routes"
-
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/porky256/mock-interview-tbr/internal/routes"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	const timeout = 3 * time.Second
 
 	server := &http.Server{
-		Addr:              ":8080",
+		Addr:              "localhost:8080",
 		Handler:           router,
 		ReadHeaderTimeout: timeout,
 	}
