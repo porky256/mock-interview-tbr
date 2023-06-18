@@ -4,22 +4,22 @@ import (
 	"time"
 )
 
-type MatchHandler struct {
-	ID         int64        `json:"id,omitempty"`
-	UserAsker  *UserHandler `json:"userAsker,omitempty"`
-	UserMatch  *UserHandler `json:"userMatch,omitempty"`
-	MatchScore int32        `json:"matchScore,omitempty"`
+type MatchAPI struct {
+	ID         int64    `json:"id,omitempty"`
+	UserAsker  *UserAPI `json:"userAsker,omitempty"`
+	UserMatch  *UserAPI `json:"userMatch,omitempty"`
+	MatchScore int32    `json:"matchScore,omitempty"`
 }
 
-type InterviewHandler struct {
-	ID     int64         `json:"id,omitempty"`
-	Match  *MatchHandler `json:"match,omitempty"`
-	Status string        `json:"status,omitempty"`
-	Date   time.Time     `json:"date,omitempty"`
+type InterviewAPI struct {
+	ID     int64     `json:"id,omitempty"`
+	Match  *MatchAPI `json:"match,omitempty"`
+	Status string    `json:"status,omitempty"`
+	Date   time.Time `json:"date,omitempty"`
 }
 
-type RequestToMatchHandler struct {
-	ID             int64          `json:"id,omitempty"`
-	Skill          *UserHandler   `json:"skill,omitempty"`
-	RequiredSkills []SkillHandler `json:"requiredSkills,omitempty"`
+type RequestToMatchAPI struct {
+	ID             int64      `json:"id,omitempty"`
+	Skill          *UserAPI   `json:"skill,omitempty"`
+	RequiredSkills []SkillAPI `json:"requiredSkills,omitempty"`
 }
