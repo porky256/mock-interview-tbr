@@ -2,16 +2,19 @@ package pg
 
 import (
 	"database/sql"
-	"github.com/porky256/mock-interview-tbr/internal/dal"
+	"time"
 )
 
-type postgresDB struct {
-	DB *sql.DB
+// PostgresDB implements GlobalDatabaseProvider
+type PostgresDB struct {
+	DB           *sql.DB
+	QueryTimeout time.Duration
 }
 
 // NewPostgresDB creates a new postgres DB entity
-func NewPostgresDB(db *sql.DB) dal.GlobalDatabaseProvider {
-	return &postgresDB{
-		DB: db,
+func NewPostgresDB(db *sql.DB, timeout time.Duration) PostgresDB {
+	return PostgresDB{
+		DB:           db,
+		QueryTimeout: timeout,
 	}
 }

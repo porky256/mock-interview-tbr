@@ -3,16 +3,19 @@ package dal
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"time"
+
+	// driver for postgresql
+	_ "github.com/lib/pq"
 )
 
+// DBConfig config to connect to database
 type DBConfig struct {
 	DriverName    string
-	MaxOpenDbConn int
-	MaxIdleDbConn int
-	MaxDbLifetime time.Duration
-	MaxDbIdletime time.Duration
+	MaxOpenDBConn int
+	MaxIdleDBConn int
+	MaxDBLifetime time.Duration
+	MaxDBIdletime time.Duration
 	Host          string
 	Port          string
 	Name          string
@@ -21,10 +24,23 @@ type DBConfig struct {
 	SSLMode       string
 }
 
-func ConnectSQL(config DBConfig) (*sql.DB, error) {
-	return sql.Open(config.DriverName, buildConnString(config))
+// DB wrapper for sql.DB
+type DB struct {
+	DB *sql.DB
 }
 
+// ConnectSQL establishes connection to DB
+func ConnectSQL(config DBConfig) (*DB, error) {
+	db, err := sql.Open(config.DriverName, buildConnString(config))
+
+	if err != nil {
+		return nil, fmt.Errorf("error occurred while connecting to DB: %w", err)
+	}
+
+	return &DB{DB: db}, nil
+}
+
+// buildConnString forms conn string from config
 func buildConnString(c DBConfig) string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
 		c.User, c.Password, c.Name, c.Host, c.Port, c.SSLMode)

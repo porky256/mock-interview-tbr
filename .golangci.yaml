@@ -39,3 +39,11 @@ linters:
     - gofumpt
     - depguard
     - exhaustruct
+    - godot
+
+linters-settings:
+  varnamelen:
+    ignore-names:
+      - id
+      - err
+      - db
