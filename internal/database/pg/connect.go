@@ -3,8 +3,7 @@ package pg
 import (
 	"database/sql"
 	"fmt"
-
-	"github.com/porky256/mock-interview-tbr/internal/dal"
+	"github.com/porky256/mock-interview-tbr/internal/database"
 
 	// driver for postgresql
 	_ "github.com/lib/pq"
@@ -16,7 +15,7 @@ type DB struct {
 }
 
 // ConnectPGSQL establishes connection to DB
-func ConnectPGSQL(config dal.DBConfig) (*DB, error) {
+func ConnectPGSQL(config database.DBConfig) (*DB, error) {
 	db, err := sql.Open(config.DriverName, buildPGConnString(config))
 
 	if err != nil {
@@ -27,7 +26,7 @@ func ConnectPGSQL(config dal.DBConfig) (*DB, error) {
 }
 
 // buildPGConnString forms conn string from config
-func buildPGConnString(c dal.DBConfig) string {
+func buildPGConnString(c database.DBConfig) string {
 	return fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s",
 		c.User, c.Password, c.Name, c.Host, c.Port, c.SSLMode)
 }
