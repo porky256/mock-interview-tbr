@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/porky256/mock-interview-tbr/internal/database"
+
 	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
 )
 
@@ -28,13 +30,11 @@ func (db *PGUserProvider) InsertUser(user repomodels.UserRepo) (int, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 	defer cancel()
 
-	var newID int
-
 	stmt := `INSERT INTO  users (username, first_name, last_name, email, password, phone, user_status, description) 
 			 VALUES
-			 ($1, $2, $3, $4, $5, $6, $7,$8) RETURNING id`
+			 ($1, $2, $3, $4, $5, $6, $7,$8)`
 
-	err := db.DB.QueryRowContext(ctx, stmt,
+	res, err := db.DB.ExecContext(ctx, stmt,
 		user.Username,
 		user.FirstName,
 		user.LastName,
@@ -43,13 +43,28 @@ func (db *PGUserProvider) InsertUser(user repomodels.UserRepo) (int, error) {
 		user.Phone,
 		user.UserStatus,
 		user.Description,
-	).Scan(&newID)
+	)
 
 	if err != nil {
 		return 0, fmt.Errorf("error with InsertUser query: %w", err)
 	}
 
-	return newID, nil
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return 0, database.ErrNoRowsInserted
+	}
+
+	newID, err := res.LastInsertId()
+
+	if err != nil {
+		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+	}
+
+	return int(newID), nil
 }
 
 // GetUserByID scans for user with selected id
@@ -58,8 +73,10 @@ func (db *PGUserProvider) GetUserByID(id int) (*repomodels.UserRepo, error) {
 
 	defer cancel()
 
+	stmt := `SELECT id, username, first_name, last_name, email, password, phone, 
+        user_status, description, created_at, updated_at FROM users WHERE id=$1`
 	user := new(repomodels.UserRepo)
-	row := db.DB.QueryRowContext(ctx, "SELECT * FROM users WHERE id=$1", id)
+	row := db.DB.QueryRowContext(ctx, stmt, id)
 	err := row.Scan(
 		&user.ID,
 		&user.Username,
@@ -88,7 +105,9 @@ func (db *PGUserProvider) GetUserByUsername(username string) (*repomodels.UserRe
 	defer cancel()
 
 	user := new(repomodels.UserRepo)
-	row := db.DB.QueryRowContext(ctx, "SELECT * FROM users WHERE username=$1", username)
+	stmt := `SELECT id, username, first_name, last_name, email, password, phone, 
+        user_status, description, created_at, updated_at FROM users WHERE username=$1`
+	row := db.DB.QueryRowContext(ctx, stmt, username)
 	err := row.Scan(
 		&user.ID,
 		&user.Username,
@@ -118,8 +137,7 @@ func (db *PGUserProvider) UpdateUser(user repomodels.UserRepo) error {
 	stmt := `UPDATE users SET username = $1, first_name = $2 last_name = $3, email = $4, 
                               password = $5, phone = $6, user_status=$7, description = $8 WHERE id=$9
 			`
-
-	_, err := db.DB.ExecContext(ctx, stmt,
+	res, err := db.DB.ExecContext(ctx, stmt,
 		user.Username,
 		user.FirstName,
 		user.LastName,
@@ -135,6 +153,15 @@ func (db *PGUserProvider) UpdateUser(user repomodels.UserRepo) error {
 		return fmt.Errorf("error with UpdateUser query: %w", err)
 	}
 
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error with UpdateUser query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNoRowsUpdated
+	}
+
 	return nil
 }
 
@@ -144,10 +171,19 @@ func (db *PGUserProvider) DeleteUserByID(id int) error {
 
 	defer cancel()
 
-	_, err := db.DB.ExecContext(ctx, "DELETE FROM users WHERE id=$1", id)
+	res, err := db.DB.ExecContext(ctx, "DELETE FROM users WHERE id=$1", id)
 
 	if err != nil {
 		return fmt.Errorf("error with DeleteUserByID query: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error with DeleteUserByID query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNoRowsDeleted
 	}
 
 	return nil
@@ -158,23 +194,36 @@ func (db *PGUserProvider) InsertUserSkill(skill repomodels.UserSkillRepo) (int, 
 	ctx, cancel := context.WithTimeout(context.Background(), db.QueryTimeout)
 	defer cancel()
 
-	var newID int
-
 	stmt := `INSERT INTO  users_skills (skill_id, user_id, score) 
 			 VALUES
-			 ($1, $2, $3) RETURNING id`
+			 ($1, $2, $3)`
 
-	err := db.DB.QueryRowContext(ctx, stmt,
+	res, err := db.DB.ExecContext(ctx, stmt,
 		skill.SkillID,
 		skill.UserID,
 		skill.Score,
-	).Scan(&newID)
+	)
 
 	if err != nil {
 		return 0, fmt.Errorf("error with InsertUserSkill query: %w", err)
 	}
 
-	return newID, nil
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, fmt.Errorf("error with InsertUserSkill query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return 0, database.ErrNoRowsInserted
+	}
+
+	newID, err := res.LastInsertId()
+
+	if err != nil {
+		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+	}
+
+	return int(newID), nil
 }
 
 // GetUserSkillByID scans for user's skill with selected id
@@ -184,7 +233,8 @@ func (db *PGUserProvider) GetUserSkillByID(id int) (*repomodels.UserSkillRepo, e
 	defer cancel()
 
 	skill := new(repomodels.UserSkillRepo)
-	row := db.DB.QueryRowContext(ctx, "SELECT * FROM users_skills WHERE id=$1", id)
+	stmt := `SELECT id, skill_id, user_id, score, created_at, updated_at  FROM users_skills WHERE id=$1`
+	row := db.DB.QueryRowContext(ctx, stmt, id)
 	err := row.Scan(
 		&skill.ID,
 		&skill.SkillID,
@@ -207,8 +257,9 @@ func (db *PGUserProvider) GetUsersSkillsByUserID(userID int) ([]repomodels.UserS
 	defer cancel()
 
 	skills := make([]repomodels.UserSkillRepo, 0)
+	stmt := `SELECT id, skill_id, user_id, score, created_at, updated_at  FROM users_skills WHERE user_id=$1`
 
-	rows, err := db.DB.QueryContext(ctx, "SELECT * FROM users_skills WHERE user_id=$1", userID)
+	rows, err := db.DB.QueryContext(ctx, stmt, userID)
 
 	if err != nil {
 		return nil, fmt.Errorf("error with GetUsersSkillsByUserID query: %w", err)
@@ -248,7 +299,7 @@ func (db *PGUserProvider) UpdateUserSkill(skill repomodels.UserSkillRepo) error 
 
 	stmt := `UPDATE users_skills SET skill_id = $1, user_id = $2 score = $3 WHERE id=$4`
 
-	_, err := db.DB.ExecContext(ctx, stmt,
+	res, err := db.DB.ExecContext(ctx, stmt,
 		skill.SkillID,
 		skill.UserID,
 		skill.Score,
@@ -257,6 +308,15 @@ func (db *PGUserProvider) UpdateUserSkill(skill repomodels.UserSkillRepo) error 
 
 	if err != nil {
 		return fmt.Errorf("error with UpdateUserSkill query: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error with UpdateUserSkill query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNoRowsUpdated
 	}
 
 	return nil
@@ -268,10 +328,19 @@ func (db *PGUserProvider) DeleteUserSkillByID(id int) error {
 
 	defer cancel()
 
-	_, err := db.DB.ExecContext(ctx, "DELETE FROM users_skills WHERE id=$1", id)
+	res, err := db.DB.ExecContext(ctx, "DELETE FROM users_skills WHERE id=$1", id)
 
 	if err != nil {
 		return fmt.Errorf("error with DeleteUserSkillByID query: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error with DeleteUserSkillByID query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNoRowsDeleted
 	}
 
 	return nil
@@ -283,10 +352,19 @@ func (db *PGUserProvider) DeleteUserSkillByUserID(userID int) error {
 
 	defer cancel()
 
-	_, err := db.DB.ExecContext(ctx, "DELETE FROM users_skills WHERE user_id=$1", userID)
+	res, err := db.DB.ExecContext(ctx, "DELETE FROM users_skills WHERE user_id=$1", userID)
 
 	if err != nil {
 		return fmt.Errorf("error with DeleteUserSkillByUserID query: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("error with DeleteUserSkillByUserID query: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return database.ErrNoRowsDeleted
 	}
 
 	return nil

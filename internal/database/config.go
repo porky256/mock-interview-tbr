@@ -1,6 +1,15 @@
 package database
 
-import "time"
+import (
+	"errors"
+	"time"
+)
+
+var ErrNoRowsDeleted = errors.New("no rows was deleted")
+
+var ErrNoRowsUpdated = errors.New("no rows was updated")
+
+var ErrNoRowsInserted = errors.New("no rows was inserted")
 
 // DBConfig config to connect to database
 type DBConfig struct {

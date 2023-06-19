@@ -6,6 +6,7 @@ import (
 	"github.com/DATA-DOG/go-sqlmock"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"github.com/porky256/mock-interview-tbr/internal/database"
 	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
 	"github.com/porky256/mock-interview-tbr/internal/user"
 	"time"
@@ -50,18 +51,27 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("InsertUser", func() {
+			exec := "INSERT INTO users"
 			It("all good", func() {
-				rows := sqlmock.NewRows([]string{"id"}).AddRow(user.ID)
-				mock.ExpectQuery("INSERT INTO users").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					user.Username, user.FirstName, user.LastName, user.Email,
-					user.Password, user.Phone, user.UserStatus, user.Description).WillReturnRows(rows)
+					user.Password, user.Phone, user.UserStatus, user.Description).WillReturnResult(sqlmock.NewResult(1, 1))
 				id, err := db.InsertUser(user)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(id).To(Equal(user.ID))
 			})
 
+			It("no rows inserted", func() {
+				mock.ExpectExec(exec).WithArgs(
+					user.Username, user.FirstName, user.LastName, user.Email,
+					user.Password, user.Phone, user.UserStatus, user.Description).WillReturnResult(sqlmock.NewResult(0, 0))
+				id, err := db.InsertUser(user)
+				Expect(err).To(Equal(database.ErrNoRowsInserted))
+				Expect(id).To(Equal(0))
+			})
+
 			It("handle error", func() {
-				mock.ExpectQuery("INSERT INTO users").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					user.Username, user.FirstName, user.LastName, user.Email,
 					user.Password, user.Phone, user.UserStatus, user.Description).WillReturnError(fmt.Errorf("error"))
 				id, err := db.InsertUser(user)
@@ -71,12 +81,14 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("GetUserByID", func() {
+			query := `SELECT id, username, first_name, last_name, email, password, phone, 
+        user_status, description, created_at, updated_at FROM users`
 			It("all good", func() {
 				rows := sqlmock.NewRows([]string{"id", "username", "first_name", "last_name", "email", "password",
 					"phone", "user_status", "description", "created_at", "updated_at"}).AddRow(
 					user.ID, user.Username, user.FirstName, user.LastName, user.Email, user.Password,
 					user.Phone, user.UserStatus, user.Description, user.CreatedAt, user.UpdatedAt)
-				mock.ExpectQuery(`SELECT \* FROM users`).WithArgs(user.ID).WillReturnRows(rows)
+				mock.ExpectQuery(query).WithArgs(user.ID).WillReturnRows(rows)
 				got, err := db.GetUserByID(user.ID)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(*got).To(Equal(user))
@@ -84,7 +96,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 
 			It("handle error", func() {
-				mock.ExpectQuery(`SELECT \* FROM users`).WithArgs(user.ID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectQuery(query).WithArgs(user.ID).WillReturnError(fmt.Errorf("error"))
 				got, err := db.GetUserByID(user.ID)
 				Expect(err).To(HaveOccurred())
 				Expect(got).To(BeNil())
@@ -92,12 +104,15 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("GetUserByUsername", func() {
+			query := `SELECT id, username, first_name, last_name, email, password, phone, 
+        user_status, description, created_at, updated_at FROM users`
+
 			It("all good", func() {
 				rows := sqlmock.NewRows([]string{"id", "username", "first_name", "last_name", "email", "password",
 					"phone", "user_status", "description", "created_at", "updated_at"}).AddRow(
 					user.ID, user.Username, user.FirstName, user.LastName, user.Email, user.Password,
 					user.Phone, user.UserStatus, user.Description, user.CreatedAt, user.UpdatedAt)
-				mock.ExpectQuery(`SELECT \* FROM users`).WithArgs(user.Username).WillReturnRows(rows)
+				mock.ExpectQuery(query).WithArgs(user.Username).WillReturnRows(rows)
 				got, err := db.GetUserByUsername(user.Username)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(*got).To(Equal(user))
@@ -105,7 +120,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 
 			It("handle error", func() {
-				mock.ExpectQuery(`SELECT \* FROM users`).WithArgs(user.Username).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectQuery(query).WithArgs(user.Username).WillReturnError(fmt.Errorf("error"))
 				got, err := db.GetUserByUsername(user.Username)
 				Expect(err).To(HaveOccurred())
 				Expect(got).To(BeNil())
@@ -114,6 +129,7 @@ var _ = Describe("Postgres Repo", func() {
 
 		Context("UpdateUser", func() {
 			var newUser repomodels.UserRepo
+			exec := "UPDATE users SET"
 			BeforeEach(func() {
 				newUser = repomodels.UserRepo{
 					ID:          1,
@@ -131,15 +147,23 @@ var _ = Describe("Postgres Repo", func() {
 			})
 
 			It("all good", func() {
-				mock.ExpectExec("UPDATE users SET").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					newUser.Username, newUser.FirstName, newUser.LastName, newUser.Email,
 					newUser.Password, newUser.Phone, newUser.UserStatus, newUser.Description, newUser.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 				err := db.UpdateUser(newUser)
 				Expect(err).ToNot(HaveOccurred())
 			})
 
+			It("no rows updated", func() {
+				mock.ExpectExec(exec).WithArgs(
+					newUser.Username, newUser.FirstName, newUser.LastName, newUser.Email,
+					newUser.Password, newUser.Phone, newUser.UserStatus, newUser.Description, newUser.ID).WillReturnResult(sqlmock.NewResult(0, 0))
+				err := db.UpdateUser(newUser)
+				Expect(err).To(Equal(database.ErrNoRowsUpdated))
+			})
+
 			It("handle error", func() {
-				mock.ExpectExec("UPDATE users SET").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					newUser.Username, newUser.FirstName, newUser.LastName, newUser.Email,
 					newUser.Password, newUser.Phone, newUser.UserStatus, newUser.Description, newUser.ID).WillReturnError(fmt.Errorf("bad error"))
 				err := db.UpdateUser(newUser)
@@ -148,15 +172,22 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("DeleteUserByID", func() {
+			exec := `DELETE FROM users`
 			It("all good", func() {
-				mock.ExpectExec(`DELETE FROM users`).WithArgs(user.ID).WillReturnResult(sqlmock.NewResult(1, 1))
+				mock.ExpectExec(exec).WithArgs(user.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 				err := db.DeleteUserByID(user.ID)
 				Expect(err).ToNot(HaveOccurred())
 
 			})
 
+			It("no rows deleted", func() {
+				mock.ExpectExec(exec).WithArgs(user.ID).WillReturnResult(sqlmock.NewResult(0, 0))
+				err := db.DeleteUserByID(user.ID)
+				Expect(err).To(Equal(database.ErrNoRowsDeleted))
+			})
+
 			It("handle error", func() {
-				mock.ExpectExec(`DELETE FROM users`).WithArgs(user.ID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectExec(exec).WithArgs(user.ID).WillReturnError(fmt.Errorf("error"))
 				err := db.DeleteUserByID(user.ID)
 				Expect(err).To(HaveOccurred())
 			})
@@ -182,17 +213,25 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("InsertUserSkill", func() {
+			exec := `INSERT INTO  users_skills`
 			It("all good", func() {
-				rows := sqlmock.NewRows([]string{"id"}).AddRow(userSkill.ID)
-				mock.ExpectQuery("INSERT INTO users_skills").WithArgs(
-					userSkill.SkillID, userSkill.UserID, userSkill.Score).WillReturnRows(rows)
+				mock.ExpectExec(exec).WithArgs(
+					userSkill.SkillID, userSkill.UserID, userSkill.Score).WillReturnResult(sqlmock.NewResult(1, 1))
 				id, err := db.InsertUserSkill(userSkill)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(id).To(Equal(userSkill.ID))
 			})
 
+			It("no rows inserted", func() {
+				mock.ExpectExec(exec).WithArgs(
+					userSkill.SkillID, userSkill.UserID, userSkill.Score).WillReturnResult(sqlmock.NewResult(0, 0))
+				id, err := db.InsertUserSkill(userSkill)
+				Expect(err).To(Equal(database.ErrNoRowsInserted))
+				Expect(id).To(Equal(0))
+			})
+
 			It("handle error", func() {
-				mock.ExpectQuery("INSERT INTO users_skills").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					userSkill.SkillID, userSkill.UserID, userSkill.Score).WillReturnError(fmt.Errorf("error"))
 				id, err := db.InsertUserSkill(userSkill)
 				Expect(err).To(HaveOccurred())
@@ -201,10 +240,12 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("GetUserSkillByID", func() {
+			exec := `SELECT id, skill_id, user_id, score, created_at, updated_at  FROM users_skills`
+
 			It("all good", func() {
 				rows := sqlmock.NewRows([]string{"id", "skill_id", "user_id", "score", "created_at", "updated_at"}).AddRow(
 					userSkill.ID, userSkill.SkillID, userSkill.UserID, userSkill.Score, userSkill.CreatedAt, userSkill.UpdatedAt)
-				mock.ExpectQuery(`SELECT \* FROM users_skills`).WithArgs(userSkill.ID).WillReturnRows(rows)
+				mock.ExpectQuery(exec).WithArgs(userSkill.ID).WillReturnRows(rows)
 				got, err := db.GetUserSkillByID(userSkill.ID)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(*got).To(Equal(userSkill))
@@ -212,7 +253,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 
 			It("handle error", func() {
-				mock.ExpectQuery(`SELECT \* FROM users_skills`).WithArgs(userSkill.ID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectQuery(exec).WithArgs(userSkill.ID).WillReturnError(fmt.Errorf("error"))
 				got, err := db.GetUserSkillByID(userSkill.ID)
 				Expect(err).To(HaveOccurred())
 				Expect(got).To(BeNil())
@@ -220,11 +261,13 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("GetUsersSkillsByUserID", func() {
+			exec := `SELECT id, skill_id, user_id, score, created_at, updated_at  FROM users_skills`
+
 			It("all good", func() {
 				rows := sqlmock.NewRows([]string{"id", "skill_id", "user_id", "score", "created_at", "updated_at"}).AddRow(
 					userSkill.ID, userSkill.SkillID, userSkill.UserID, userSkill.Score, userSkill.CreatedAt, userSkill.UpdatedAt).AddRow(
 					userSkill.ID, userSkill.SkillID, userSkill.UserID, userSkill.Score, userSkill.CreatedAt, userSkill.UpdatedAt)
-				mock.ExpectQuery(`SELECT \* FROM users_skills`).WithArgs(userSkill.UserID).WillReturnRows(rows)
+				mock.ExpectQuery(exec).WithArgs(userSkill.UserID).WillReturnRows(rows)
 				got, err := db.GetUsersSkillsByUserID(userSkill.UserID)
 				Expect(err).ToNot(HaveOccurred())
 				Expect(len(got)).To(Equal(2))
@@ -233,7 +276,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 
 			It("handle error", func() {
-				mock.ExpectQuery(`SELECT \* FROM users_skills`).WithArgs(userSkill.UserID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectQuery(exec).WithArgs(userSkill.UserID).WillReturnError(fmt.Errorf("error"))
 				got, err := db.GetUsersSkillsByUserID(userSkill.UserID)
 				Expect(err).To(HaveOccurred())
 				Expect(got).To(BeNil())
@@ -252,16 +295,24 @@ var _ = Describe("Postgres Repo", func() {
 					UpdatedAt: time.Now(),
 				}
 			})
+			exec := "UPDATE users_skills SET"
 
 			It("all good", func() {
-				mock.ExpectExec("UPDATE users_skills SET").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					newUserSkill.SkillID, newUserSkill.UserID, newUserSkill.Score, newUserSkill.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 				err := db.UpdateUserSkill(newUserSkill)
 				Expect(err).ToNot(HaveOccurred())
 			})
 
+			It("no rows updated", func() {
+				mock.ExpectExec(exec).WithArgs(
+					newUserSkill.SkillID, newUserSkill.UserID, newUserSkill.Score, newUserSkill.ID).WillReturnResult(sqlmock.NewResult(0, 0))
+				err := db.UpdateUserSkill(newUserSkill)
+				Expect(err).To(Equal(database.ErrNoRowsUpdated))
+			})
+
 			It("handle error", func() {
-				mock.ExpectExec("UPDATE users_skills SET").WithArgs(
+				mock.ExpectExec(exec).WithArgs(
 					newUserSkill.SkillID, newUserSkill.UserID, newUserSkill.Score, newUserSkill.ID).WillReturnError(fmt.Errorf("bad error"))
 				err := db.UpdateUserSkill(newUserSkill)
 				Expect(err).To(HaveOccurred())
@@ -269,30 +320,45 @@ var _ = Describe("Postgres Repo", func() {
 		})
 
 		Context("DeleteUserSkillByID", func() {
+			exec := `DELETE FROM users_skills`
 			It("all good", func() {
-				mock.ExpectExec(`DELETE FROM users_skills`).WithArgs(userSkill.ID).WillReturnResult(sqlmock.NewResult(1, 1))
+				mock.ExpectExec(exec).WithArgs(userSkill.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 				err := db.DeleteUserSkillByID(userSkill.ID)
 				Expect(err).ToNot(HaveOccurred())
 
 			})
+			It("no rows deleted", func() {
+				mock.ExpectExec(exec).WithArgs(userSkill.ID).WillReturnResult(sqlmock.NewResult(0, 0))
+				err := db.DeleteUserSkillByID(userSkill.ID)
+				Expect(err).To(Equal(database.ErrNoRowsDeleted))
+			})
 
 			It("handle error", func() {
-				mock.ExpectExec(`DELETE FROM users_skills`).WithArgs(userSkill.ID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectExec(exec).WithArgs(userSkill.ID).WillReturnError(fmt.Errorf("error"))
 				err := db.DeleteUserSkillByID(userSkill.ID)
 				Expect(err).To(HaveOccurred())
 			})
 		})
 
 		Context("DeleteUserSkillByUserID", func() {
+			exec := `DELETE FROM users_skills`
+
 			It("all good", func() {
-				mock.ExpectExec(`DELETE FROM users_skills`).WithArgs(userSkill.UserID).WillReturnResult(sqlmock.NewResult(1, 1))
+				mock.ExpectExec(exec).WithArgs(userSkill.UserID).WillReturnResult(sqlmock.NewResult(1, 1))
 				err := db.DeleteUserSkillByUserID(userSkill.UserID)
 				Expect(err).ToNot(HaveOccurred())
 
 			})
 
+			It("no rows deleted", func() {
+				mock.ExpectExec(exec).WithArgs(userSkill.UserID).WillReturnResult(sqlmock.NewResult(0, 0))
+				err := db.DeleteUserSkillByUserID(userSkill.UserID)
+				Expect(err).To(Equal(database.ErrNoRowsDeleted))
+
+			})
+
 			It("handle error", func() {
-				mock.ExpectExec(`DELETE FROM users_skills`).WithArgs(userSkill.UserID).WillReturnError(fmt.Errorf("error"))
+				mock.ExpectExec(exec).WithArgs(userSkill.UserID).WillReturnError(fmt.Errorf("error"))
 				err := db.DeleteUserSkillByUserID(userSkill.UserID)
 				Expect(err).To(HaveOccurred())
 			})
