@@ -5,7 +5,7 @@
 package mock_user
 
 import (
-	repomodel "github.com/porky256/mock-interview-tbr/internal/models"
+	repomodel "github.com/porky256/mock-interview-tbr/internal/models/repo_models"
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"

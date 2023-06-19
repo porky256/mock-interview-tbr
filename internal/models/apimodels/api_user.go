@@ -1,4 +1,4 @@
-package models
+package apimodels
 
 type UserAPI struct {
 	ID          int64           `json:"id,omitempty"`
