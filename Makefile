@@ -12,7 +12,7 @@ create-new-migration:
 
 .PHONY: local-lint
 local-lint:
-	golangci-lint run --fix
+	golangci-lint run
 
 .PHONY: generate-mock
 generate-mock:

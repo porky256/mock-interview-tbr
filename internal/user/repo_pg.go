@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
 	"time"
+
+	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
 )
 
 // PGUserProvider implements GlobalDatabaseProvider
@@ -206,11 +207,14 @@ func (db *PGUserProvider) GetUsersSkillsByUserID(userID int) ([]repomodels.UserS
 	defer cancel()
 
 	skills := make([]repomodels.UserSkillRepo, 0)
+
 	rows, err := db.DB.QueryContext(ctx, "SELECT * FROM users_skills WHERE user_id=$1", userID)
 
 	if err != nil {
 		return nil, fmt.Errorf("error with GetUsersSkillsByUserID query: %w", err)
 	}
+
+	defer rows.Close()
 
 	for rows.Next() {
 		var skill repomodels.UserSkillRepo
@@ -226,6 +230,7 @@ func (db *PGUserProvider) GetUsersSkillsByUserID(userID int) ([]repomodels.UserS
 		if err != nil {
 			return nil, fmt.Errorf("error with GetUsersSkillsByUserID query: %w", err)
 		}
+
 		skills = append(skills, skill)
 	}
 
