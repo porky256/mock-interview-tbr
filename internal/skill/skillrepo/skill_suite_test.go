@@ -1,4 +1,4 @@
-package skill_test
+package skillrepo_test
 
 import (
 	"testing"

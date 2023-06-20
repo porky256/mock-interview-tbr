@@ -16,7 +16,7 @@ local-lint:
 
 .PHONY: generate-mock
 generate-mock:
-	mockgen -source ./internal/user/repo_interface.go -destination ./internal/user/mock/repo_mock.go
-	mockgen -source ./internal/skill/repo_interface.go -destination ./internal/skill/mock/repo_mock.go
+	mockgen -source ./internal/user/userrepo/repo_interface.go -destination ./internal/user/userrepo/mock/repo_mock.go
+	mockgen -source ./internal/skill/skillrepo/repo_interface.go -destination ./internal/skill/skillrepo/mock/repo_mock.go
 	mockgen -source ./internal/match/matchrepo/repo_interface.go -destination ./internal/match/matchrepo/mock/repo_mock.go
 

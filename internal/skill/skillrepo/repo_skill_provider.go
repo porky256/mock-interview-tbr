@@ -1,28 +1,12 @@
-package skill
+package skillrepo
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
-	"time"
 
 	"github.com/porky256/mock-interview-tbr/internal/database"
 	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
 )
-
-// PGSkillProvider implements GlobalDatabaseProvider
-type PGSkillProvider struct {
-	DB           *sql.DB
-	QueryTimeout time.Duration
-}
-
-// NewPGSkillProvider creates a new postgres DB entity
-func NewPGSkillProvider(db *sql.DB, timeout time.Duration) *PGSkillProvider {
-	return &PGSkillProvider{
-		DB:           db,
-		QueryTimeout: timeout,
-	}
-}
 
 // InsertSkill inserts a skill into the database
 func (db *PGSkillProvider) InsertSkill(skill repomodels.SkillRepo) (int, error) {
