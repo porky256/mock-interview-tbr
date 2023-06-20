@@ -11,19 +11,15 @@ permissions:
 
 jobs:
   unit-test:
-    strategy:
-      matrix:
-        go: [ '1.20' ]
-        os: [ macos-latest ]
     name: test
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ github.os }}
 
     steps:
       - uses: actions/checkout@v3
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{matrix.go}}
+          go-version: ${{github.go_version}}
           cache: false
       - name: Test with the Go CLI
         run: go test ./...
