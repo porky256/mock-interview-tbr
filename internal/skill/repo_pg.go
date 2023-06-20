@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
+
 	"github.com/porky256/mock-interview-tbr/internal/database"
 	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
-	"time"
 )
 
 // PGSkillProvider implements GlobalDatabaseProvider
