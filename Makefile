@@ -18,4 +18,5 @@ local-lint:
 generate-mock:
 	mockgen -source ./internal/user/repo_interface.go -destination ./internal/user/mock/repo_mock.go
 	mockgen -source ./internal/skill/repo_interface.go -destination ./internal/skill/mock/repo_mock.go
+	mockgen -source ./internal/match/matchrepo/repo_interface.go -destination ./internal/match/matchrepo/mock/repo_mock.go
 
