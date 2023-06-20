@@ -37,7 +37,7 @@ func (m *MockDatabaseUserProvider) EXPECT() *MockDatabaseUserProviderMockRecorde
 // DeleteUserByID mocks base method.
 func (m *MockDatabaseUserProvider) DeleteUserByID(id int) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteUserMatchByID", id)
+	ret := m.ctrl.Call(m, "DeleteUserByID", id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -45,7 +45,7 @@ func (m *MockDatabaseUserProvider) DeleteUserByID(id int) error {
 // DeleteUserByID indicates an expected call of DeleteUserByID.
 func (mr *MockDatabaseUserProviderMockRecorder) DeleteUserByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserMatchByID", reflect.TypeOf((*MockDatabaseUserProvider)(nil).DeleteUserByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUserByID", reflect.TypeOf((*MockDatabaseUserProvider)(nil).DeleteUserByID), id)
 }
 
 // DeleteUserSkillByID mocks base method.
@@ -79,7 +79,7 @@ func (mr *MockDatabaseUserProviderMockRecorder) DeleteUserSkillByUserID(userID i
 // GetUserByID mocks base method.
 func (m *MockDatabaseUserProvider) GetUserByID(id int) (*repomodels.UserRepo, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserMatchByID", id)
+	ret := m.ctrl.Call(m, "GetUserByID", id)
 	ret0, _ := ret[0].(*repomodels.UserRepo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -88,13 +88,13 @@ func (m *MockDatabaseUserProvider) GetUserByID(id int) (*repomodels.UserRepo, er
 // GetUserByID indicates an expected call of GetUserByID.
 func (mr *MockDatabaseUserProviderMockRecorder) GetUserByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserMatchByID", reflect.TypeOf((*MockDatabaseUserProvider)(nil).GetUserByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockDatabaseUserProvider)(nil).GetUserByID), id)
 }
 
 // GetUserByUsername mocks base method.
 func (m *MockDatabaseUserProvider) GetUserByUsername(username string) (*repomodels.UserRepo, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserMatchByUserAskerID", username)
+	ret := m.ctrl.Call(m, "GetUserByUsername", username)
 	ret0, _ := ret[0].(*repomodels.UserRepo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -103,7 +103,7 @@ func (m *MockDatabaseUserProvider) GetUserByUsername(username string) (*repomode
 // GetUserByUsername indicates an expected call of GetUserByUsername.
 func (mr *MockDatabaseUserProviderMockRecorder) GetUserByUsername(username interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserMatchByUserAskerID", reflect.TypeOf((*MockDatabaseUserProvider)(nil).GetUserByUsername), username)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockDatabaseUserProvider)(nil).GetUserByUsername), username)
 }
 
 // GetUserSkillByID mocks base method.
@@ -139,7 +139,7 @@ func (mr *MockDatabaseUserProviderMockRecorder) GetUsersSkillsByUserID(userID in
 // InsertUser mocks base method.
 func (m *MockDatabaseUserProvider) InsertUser(user repomodels.UserRepo) (int, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "InsertUserMatch", user)
+	ret := m.ctrl.Call(m, "InsertUser", user)
 	ret0, _ := ret[0].(int)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
@@ -148,7 +148,7 @@ func (m *MockDatabaseUserProvider) InsertUser(user repomodels.UserRepo) (int, er
 // InsertUser indicates an expected call of InsertUser.
 func (mr *MockDatabaseUserProviderMockRecorder) InsertUser(user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertUserMatch", reflect.TypeOf((*MockDatabaseUserProvider)(nil).InsertUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertUser", reflect.TypeOf((*MockDatabaseUserProvider)(nil).InsertUser), user)
 }
 
 // InsertUserSkill mocks base method.
@@ -169,7 +169,7 @@ func (mr *MockDatabaseUserProviderMockRecorder) InsertUserSkill(skill interface{
 // UpdateUser mocks base method.
 func (m *MockDatabaseUserProvider) UpdateUser(user repomodels.UserRepo) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateUserMatch", user)
+	ret := m.ctrl.Call(m, "UpdateUser", user)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -177,7 +177,7 @@ func (m *MockDatabaseUserProvider) UpdateUser(user repomodels.UserRepo) error {
 // UpdateUser indicates an expected call of UpdateUser.
 func (mr *MockDatabaseUserProviderMockRecorder) UpdateUser(user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserMatch", reflect.TypeOf((*MockDatabaseUserProvider)(nil).UpdateUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUser", reflect.TypeOf((*MockDatabaseUserProvider)(nil).UpdateUser), user)
 }
 
 // UpdateUserSkill mocks base method.
