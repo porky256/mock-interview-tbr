@@ -21,7 +21,5 @@ jobs:
         with:
           go-version: ${{vars.go_version}}
           cache: false
-      - name: Test with the Go CLI
-        run: go test ./...
       - name: Test with GinkGo
-        run: go run github.com/onsi/ginkgo/v2/ginkgo -r --randomize-all --randomize-suites --fail-on-pending --keep-going --race --trace
+        run: go run github.com/onsi/ginkgo/v2/ginkgo -r --randomize-all --randomize-suites --fail-on-pending --race --trace
