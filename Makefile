@@ -1,4 +1,4 @@
-.PHONY: build-sever
+.PHONY: build
 build:
 	go build -o server ./cmd/server/.
 

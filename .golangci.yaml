@@ -40,6 +40,9 @@ linters:
     - depguard
     - exhaustruct
     - godot
+    - interfacebloat
+    - rowserrcheck
+    - execinquery
 
 linters-settings:
   varnamelen:
