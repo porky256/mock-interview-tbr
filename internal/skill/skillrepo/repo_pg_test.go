@@ -1,4 +1,4 @@
-package skill_test
+package skillrepo_test
 
 import (
 	"database/sql"
@@ -8,18 +8,18 @@ import (
 	. "github.com/onsi/gomega"
 	"github.com/porky256/mock-interview-tbr/internal/database"
 	"github.com/porky256/mock-interview-tbr/internal/models/repomodels"
-	"github.com/porky256/mock-interview-tbr/internal/skill"
+	"github.com/porky256/mock-interview-tbr/internal/skill/skillrepo"
 	"time"
 )
 
 var _ = Describe("Postgres Repo", func() {
 	var mock sqlmock.Sqlmock
-	var db skill.DatabaseSkillProvider
+	var db skillrepo.DatabaseSkillProvider
 	var mdb *sql.DB
 	BeforeEach(func() {
 		var err error
 		mdb, mock, err = sqlmock.New()
-		db = skill.NewPGSkillProvider(mdb, 3*time.Second)
+		db = skillrepo.NewPGSkillProvider(mdb, 3*time.Second)
 
 		Expect(err).ToNot(HaveOccurred())
 	})

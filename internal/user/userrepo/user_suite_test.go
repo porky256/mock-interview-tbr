@@ -1,4 +1,4 @@
-package user_test
+package userrepo_test
 
 import (
 	"testing"
