@@ -12,14 +12,14 @@ permissions:
 jobs:
   unit-test:
     name: test
-    runs-on: ${{ github.os }}
+    runs-on: ${{ vars.os }}
 
     steps:
       - uses: actions/checkout@v3
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: ${{github.go_version}}
+          go-version: ${{vars.go_version}}
           cache: false
       - name: Test with the Go CLI
         run: go test ./...
