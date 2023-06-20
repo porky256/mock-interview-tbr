@@ -50,7 +50,7 @@ var _ = Describe("Postgres Repo", func() {
 			Expect(mock.ExpectationsWereMet()).ToNot(HaveOccurred())
 		})
 
-		Context("InsertUserMatch", func() {
+		Context("InsertUser", func() {
 			exec := "INSERT INTO users"
 			It("all good", func() {
 				mock.ExpectExec(exec).WithArgs(
@@ -80,7 +80,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 		})
 
-		Context("GetUserMatchByID", func() {
+		Context("GetUserByID", func() {
 			query := `SELECT id, username, first_name, last_name, email, password, phone, 
         user_status, description, created_at, updated_at FROM users`
 			It("all good", func() {
@@ -103,7 +103,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 		})
 
-		Context("GetUserMatchByUserAskerID", func() {
+		Context("GetUserByUsername", func() {
 			query := `SELECT id, username, first_name, last_name, email, password, phone, 
         user_status, description, created_at, updated_at FROM users`
 
@@ -127,7 +127,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 		})
 
-		Context("UpdateUserMatch", func() {
+		Context("UpdateUser", func() {
 			var newUser repomodels.UserRepo
 			exec := "UPDATE users SET"
 			BeforeEach(func() {
@@ -171,7 +171,7 @@ var _ = Describe("Postgres Repo", func() {
 			})
 		})
 
-		Context("DeleteUserMatchByID", func() {
+		Context("DeleteUserByID", func() {
 			exec := `DELETE FROM users`
 			It("all good", func() {
 				mock.ExpectExec(exec).WithArgs(user.ID).WillReturnResult(sqlmock.NewResult(1, 1))
