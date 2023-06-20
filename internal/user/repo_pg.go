@@ -46,12 +46,12 @@ func (db *PGUserProvider) InsertUser(user repomodels.UserRepo) (int, error) {
 	)
 
 	if err != nil {
-		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+		return 0, fmt.Errorf("error with InsertUserMatch query: %w", err)
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+		return 0, fmt.Errorf("error with InsertUserMatch query: %w", err)
 	}
 
 	if rowsAffected == 0 {
@@ -61,7 +61,7 @@ func (db *PGUserProvider) InsertUser(user repomodels.UserRepo) (int, error) {
 	newID, err := res.LastInsertId()
 
 	if err != nil {
-		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+		return 0, fmt.Errorf("error with InsertUserMatch query: %w", err)
 	}
 
 	return int(newID), nil
@@ -92,7 +92,7 @@ func (db *PGUserProvider) GetUserByID(id int) (*repomodels.UserRepo, error) {
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf("error with GetUserByID query: %w", err)
+		return nil, fmt.Errorf("error with GetUserMatchByID query: %w", err)
 	}
 
 	return user, nil
@@ -123,7 +123,7 @@ func (db *PGUserProvider) GetUserByUsername(username string) (*repomodels.UserRe
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf("error with GetUserByUsername query: %w", err)
+		return nil, fmt.Errorf("error with GetUserMatchByUserAskerID query: %w", err)
 	}
 
 	return user, nil
@@ -150,12 +150,12 @@ func (db *PGUserProvider) UpdateUser(user repomodels.UserRepo) error {
 	)
 
 	if err != nil {
-		return fmt.Errorf("error with UpdateUser query: %w", err)
+		return fmt.Errorf("error with UpdateUserMatch query: %w", err)
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("error with UpdateUser query: %w", err)
+		return fmt.Errorf("error with UpdateUserMatch query: %w", err)
 	}
 
 	if rowsAffected == 0 {
@@ -174,12 +174,12 @@ func (db *PGUserProvider) DeleteUserByID(id int) error {
 	res, err := db.DB.ExecContext(ctx, "DELETE FROM users WHERE id=$1", id)
 
 	if err != nil {
-		return fmt.Errorf("error with DeleteUserByID query: %w", err)
+		return fmt.Errorf("error with DeleteUserMatchByID query: %w", err)
 	}
 
 	rowsAffected, err := res.RowsAffected()
 	if err != nil {
-		return fmt.Errorf("error with DeleteUserByID query: %w", err)
+		return fmt.Errorf("error with DeleteUserMatchByID query: %w", err)
 	}
 
 	if rowsAffected == 0 {
@@ -220,7 +220,7 @@ func (db *PGUserProvider) InsertUserSkill(skill repomodels.UserSkillRepo) (int, 
 	newID, err := res.LastInsertId()
 
 	if err != nil {
-		return 0, fmt.Errorf("error with InsertUser query: %w", err)
+		return 0, fmt.Errorf("error with InsertUserMatch query: %w", err)
 	}
 
 	return int(newID), nil
