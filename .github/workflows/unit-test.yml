@@ -1,0 +1,25 @@
+name: unit-test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-test:
+    name: test
+    runs-on: ${{ vars.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{vars.go_version}}
+          cache: false
+      - name: Test with GinkGo
+        run: go run github.com/onsi/ginkgo/v2/ginkgo -r --randomize-all --randomize-suites --fail-on-pending --race --trace
